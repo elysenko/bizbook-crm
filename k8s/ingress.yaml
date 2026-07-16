@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: bizbook-crm
+  namespace: colossus-bizbook-crm
+  labels:
+    app: bizbook-crm
+    managed-by: colossus
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: ubuntu.desmana-truck.ts.net
+      http:
+        paths:
+          - path: /bizbook-crm(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: bizbook-crm
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - ubuntu.desmana-truck.ts.net
+      secretName: colossus-shared-tls
